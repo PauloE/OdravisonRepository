@@ -1,4 +1,9 @@
 package br.ufpb.dce.poo.projetopack;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,17 +17,26 @@ public class Biblioteca {
 	List<Emprestimo> emprestimosAtivos;
 	List<Usuario> usuarios;
 	
-	public void CadastrarLivro (Livro L){
-		this.livros.add(L);
+	public void CadastrarLivro (Livro l){
+		for (Livro lv: this.livros){
+			if (lv.getCodigo().equals(l.getCodigo())){
+				lv.setQuantidade(lv.getQuantidade()+l.getQuantidade());
+			}
+			
+		}
+		this.livros.add(l);
 	}
 	
-	public void CadastrarUsuario (Usuario U){
-		this.usuarios.add(U);
+	public void CadastrarUsuario (Usuario u) throws UsuarioJaExisteException{
+		if(this.usuarios.contains(u)){
+			throw new UsuarioJaExisteException ("O usuário já existe.");
+		}
+		this.usuarios.add(u);
 	}
 	
 	public Usuario getUsuario(String mat) throws UsuarioInexistenteException{
 		for (Usuario u: usuarios){
-			if (u.getMatricula() == mat){
+			if (u.getMatricula().equals(mat)){
 				return u;
 			}
 		}
@@ -142,33 +156,92 @@ public class Biblioteca {
 	}
 	
 	
+	//##########################       PERSISTÊNCIA DE ARQUIVOS      ############################################
+	
+	public void gravarEmprestimos(String nomeArquivo) throws IOException {
+		BufferedWriter gravador = null;
+		try {
+			gravador = new BufferedWriter(new FileWriter("C:\\date\\datas.txt"));
+			for (Emprestimo e: this.emprestimosAtivos){
+				gravador.write(e.getUsuario().getMatricula() +"\n");
+				gravador.write(e.getLivro().getCodigo() +"\n");
+				
+				gravador.write(e.getDataEmprestimo().get(Calendar.DAY_OF_MONTH)+"\n");
+				gravador.write(e.getDataEmprestimo().get(Calendar.MONTH) +"\n");
+				gravador.write(e.getDataEmprestimo().get(Calendar.YEAR) +"\n");
+				
+				gravador.write(e.getDataDevolucao().get(Calendar.DAY_OF_MONTH) +"\n");
+				gravador.write(e.getDataDevolucao().get(Calendar.MONTH) +"\n");
+				gravador.write(e.getDataDevolucao().get(Calendar.YEAR) +"\n");
+			}
+		} finally {
+			if (gravador!=null){
+				gravador.close();
+			}
+		}		
+	}
+	
+	public void carregarEmprestimosDeArquivo(String nomeArquivo) throws IOException, EmprestimoJaExisteException, UsuarioInexistenteException, LivroInexistenteException{
+		BufferedReader leitor = null;
+		try {
+			leitor = new BufferedReader(new FileReader(nomeArquivo));
+			String matricula = null;
+			String codigoLivro;
+			
+			String diaEmprestimo;
+			String mesEmprestimo;
+			String anoEmprestimo;
+			
+			String diaDevolucao;
+			String mesDevolucao;
+			String anoDevolucao;
+			
+			
+			do {
+				matricula = leitor.readLine(); // lê a próxima linha do arquivo: matricula do usuário
+				codigoLivro = leitor.readLine();
+				
+				diaEmprestimo = leitor.readLine();
+				mesEmprestimo = leitor.readLine();
+				anoEmprestimo = leitor.readLine();
+				
+				diaDevolucao = leitor.readLine();
+				mesDevolucao = leitor.readLine();
+				anoDevolucao = leitor.readLine();
+				
+				Usuario usuario = this.getUsuario(matricula); 
+				Livro livro = this.getLivro(codigoLivro); 
+				
+				Calendar dataEmprestimo = Calendar.getInstance();
+				dataEmprestimo.set(Integer.parseInt(diaEmprestimo),Integer.parseInt(mesEmprestimo) , Integer.parseInt(anoEmprestimo));
+				
+				Calendar dataDevolucao = Calendar.getInstance();
+				dataDevolucao.set(Integer.parseInt(anoDevolucao), Integer.parseInt(mesDevolucao), Integer.parseInt(diaDevolucao));
+				
+				Emprestimo emprestimo = new Emprestimo(usuario, livro, dataEmprestimo, dataDevolucao);
+				
+				this.emprestimosAtivos.add(emprestimo);
+				usuario.adicionarEmprestimo(emprestimo);
+				
+			} 
+			while(matricula != null); //vai ser null quando chegar no fim do arquivo
+		} 
+		finally {
+			if (leitor!=null){
+				leitor.close();
+			}
+		}
+		
+	}
+	
+	
 	
 	public static void main(String[] args) {
-		/*Calendar a = Calendar.getInstance();
-		Calendar d = Calendar.getInstance();
-		d.set(2014, 1, 1);
-		Biblioteca b = new Biblioteca();
-		b.calculaDataDevolucaoProfessor();**/
 		
-		/*Calendar dataAtual = Calendar.getInstance();
-		System.out.println(Calendar.DAY_OF_MONTH +" "+ Calendar.MONTH );
-		dataAtual.add(Calendar.DAY_OF_MONTH, 10);
-		System.out.println(Calendar.DAY_OF_MONTH +" " + Calendar.MONTH);*/
+		Biblioteca bib = new Biblioteca();
+		bib.CadastrarUsuario(new Aluno("Odravison", "12345", ""));
 		
-		//Calendar c = Calendar.getInstance();
-		//System.out.println(c);
-		//DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); //DateFormat apenas para formatar. Para gerenciar as datas não usa cabeção!!!
-		//df.format(c.getTime());
 		
-		//c.add(Calendar.DAY_OF_YEAR,30 );
-		///System.out.println(df.format(c.getTime()));
-		//System.out.println(Calendar.DAY_OF_MONTH);
-		//System.out.println(c.getTime());
-		
-		Calendar diaDevolucao = Calendar.getInstance();
-		diaDevolucao.add(Calendar.DAY_OF_YEAR, 1);
-		System.out.println(diaDevolucao.DAY_OF_MONTH +  " "  + diaDevolucao.DAY_OF_YEAR);
-		//Emprestimo e = new Emprestimo (u, lv, Calendar.getInstance(), diaDevolucao);
 	}
 	
 	

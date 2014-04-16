@@ -1,65 +1,26 @@
 package br.ufpb.dce.poo.projetopack;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public abstract class UsuarioComposto implements Usuario {
-	List<Emprestimo> emprestimos;
-	
-	private String matricula;
+	private List<Emprestimo> emprestimos;
 	private String nome;
+	private String matricula;
 	private String cpf;
-	private String departamento;
 	private String periodoIngresso;
+	private String departamento;
 	private String curso;
 	
-	public void Aluno(String matricula, String nome, String cpf, String curso, String periodoIngresso){
-		this.matricula = matricula;
+	public UsuarioComposto(String nome, String matricula, String cpf){
 		this.nome = nome;
+		this.matricula = matricula;
 		this.cpf = cpf;
-		this.curso = curso;
-		this.periodoIngresso = periodoIngresso;
-		this.emprestimos = new LinkedList<Emprestimo>();
 	}
 	
-	
-	public int getQuantDiasEmprestimo() {
-		return Configuracao.getInstance().getDiasEmprestimoProfessor();
+	public void adicionarEmprestimo(Emprestimo e){
+		this.emprestimos.add(e);
 	}
-	
-	public List<Emprestimo> getEmprestimos(){
-		return this.emprestimos;
-	}
-	
-	public String getMatricula() {
-		return this.matricula;
-	}
-	
-	public String getDepartamento(){
-		return this.departamento;
-	}
-	public String getNome() {
-		return this.nome;
-	}
-	
-	public String getCPF(){
-		return this.cpf;
-	}
-	
-	public String getCurso() {
-		return curso;
-	}
-
-	public void adicionarEmprestimo(Emprestimo emprestimo){
-		this.adicionarEmprestimo(emprestimo);
-	}
-	
-	public String getPeriodoIngresso(){
-		return this.periodoIngresso;
-	}
-
-
-	public void removerEmprestimo(Emprestimo emprestimo) {
+	public void removerEmprestimo(Emprestimo emprestimo){
 		for(Emprestimo e: this.emprestimos){
 			if(e.equals(emprestimo)){
 				this.emprestimos.remove(e);
@@ -67,6 +28,44 @@ public abstract class UsuarioComposto implements Usuario {
 			}
 		}
 	}
-
+	
+	public void setPeriodoIngresso(String periodo){
+		this.periodoIngresso = periodo;
+	}
+	
+	public void setCurso(String curso){
+		this.curso = curso;
+	}
+	
+	public String getCurso(){
+		return this.curso;
+	}
+	public String getNome(){
+		return this.nome;
+	}
+	public String getMatricula(){
+		return this.matricula;
+	}
+	public String getCPF(){
+		return this.cpf;
+	}
+	public List<Emprestimo> getEmprestimos(){
+		return this.emprestimos;
+	}
+	
+	public String getPeriodoIngresso(){
+		return this.periodoIngresso;
+		
+	}
+	
+	public String getDepartamento(){
+		return this.departamento;
+	}
+	
+	public void setDepartamento(String departamento){
+		this.departamento = departamento;
+	}
+	
+	public abstract int getQuantDiasEmprestimo();
 
 }

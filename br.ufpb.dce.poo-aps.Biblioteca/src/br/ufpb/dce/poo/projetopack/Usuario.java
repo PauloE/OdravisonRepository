@@ -10,4 +10,7 @@ public interface Usuario {
 	public String getMatricula();
 	public String getCPF();
 	public List<Emprestimo> getEmprestimos();
+	public String getPeriodoIngresso();
+	public String getCurso();
+	public String getDepartamento();
 }
