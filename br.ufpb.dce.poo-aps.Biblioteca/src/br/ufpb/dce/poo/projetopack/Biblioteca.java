@@ -12,10 +12,17 @@ import br.ufpb.dce.poo.ExceptionsProject.*;
 
 
 public class Biblioteca {
-	Configuracao configuracao = Configuracao.getInstance();
+	Configuracao configuracao;
 	List<Livro> livros;
 	List<Emprestimo> emprestimosAtivos;
 	List<Usuario> usuarios;
+	
+	public Biblioteca(){
+		configuracao = Configuracao.getInstance();
+		livros = new LinkedList<Livro>();
+		emprestimosAtivos = new LinkedList<Emprestimo>();
+		usuarios = new LinkedList<Usuario>();
+	}
 	
 	public void CadastrarLivro (Livro l){
 		for (Livro lv: this.livros){
