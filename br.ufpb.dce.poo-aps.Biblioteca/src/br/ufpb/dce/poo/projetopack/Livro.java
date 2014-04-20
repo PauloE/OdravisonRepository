@@ -7,7 +7,7 @@ public class Livro {
 	int quantidade;
 	String classificacao;
 	
-	public Livro(String nome, String codigo, String autor, int quantidade, String classificacao){
+	public Livro(String nome, String codigo, String autor, String classificacao, int quantidade){
 		this.nome = nome;
 		this.codigo = codigo;
 		this.autor = autor;
