@@ -8,7 +8,7 @@ import java.text.DateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Calendar;
-import java.util.Date;
+import br.ufpb.dce.poo.ExceptionsProject.*;
 
 
 public class Biblioteca {
@@ -373,19 +373,6 @@ public class Biblioteca {
 				}
 			}
 		}
-	
-	
-	
-	public static void main(String[] args) {
-		
-		Biblioteca bib = new Biblioteca();
-		bib.CadastrarUsuario(new Aluno("Odravison", "12345", ""));
-		
-		
-	}
-	
-	
-	
 }
 
 
