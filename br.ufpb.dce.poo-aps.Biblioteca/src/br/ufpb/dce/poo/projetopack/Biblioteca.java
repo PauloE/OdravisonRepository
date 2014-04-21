@@ -12,10 +12,25 @@ import br.ufpb.dce.poo.ExceptionsProject.*;
 
 
 public class Biblioteca {
-	Configuracao configuracao = Configuracao.getInstance();
-	List<Livro> livros;
-	List<Emprestimo> emprestimosAtivos;
-	List<Usuario> usuarios;
+	private static Biblioteca singleton;
+	private Configuracao configuracao;
+	private List<Livro> livros;
+	private List<Emprestimo> emprestimosAtivos;
+	private List<Usuario> usuarios;
+	
+	private Biblioteca(){
+		configuracao = Configuracao.getInstance();
+		livros = new LinkedList<Livro>();
+		emprestimosAtivos = new LinkedList<Emprestimo>();
+		usuarios = new LinkedList<Usuario>();
+	}
+	
+	public static Biblioteca getInstance(){
+		if(Biblioteca.singleton == null){
+			Biblioteca.singleton = new Biblioteca();
+		}
+		return Biblioteca.singleton;
+	}
 	
 	public void CadastrarLivro (Livro l){
 		for (Livro lv: this.livros){
